@@ -10,7 +10,13 @@ class MahasiswaRepository {
   };
 
   get = async () => {
-    return await this.mahasiswa.findAll();
+    return await this.mahasiswa.findAll({
+      include: {
+        model: this.prodi,
+        attributes: ["nama"],
+        as: "prodi",
+      },
+    });
   };
 
   getMahasiswaWithMatkul = async (nim) => {
@@ -19,7 +25,8 @@ class MahasiswaRepository {
       include: [
         {
           model: this.matakuliah,
-          as: "mata_kuliah",
+          as: "matakuliah",
+          attributes: ["id", "nama"],
         },
         {
           model: this.prodi,
@@ -33,6 +40,12 @@ class MahasiswaRepository {
     const mahasiswaObj = await this.mahasiswa.findByPk(nim);
     const matakuliahObj = await this.matakuliah.findByPk(mkId);
     await matakuliahObj.addMahasiswa(mahasiswaObj);
+  };
+
+  deleteMatkul = async (nim, mkId) => {
+    const mahasiswaObj = await this.mahasiswa.findByPk(nim);
+    const matakuliahObj = await this.matakuliah.findByPk(mkId);
+    await matakuliahObj.removeMahasiswa(mahasiswaObj);
   };
 }
 

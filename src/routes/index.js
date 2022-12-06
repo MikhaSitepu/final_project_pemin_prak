@@ -16,16 +16,31 @@ class Route {
   };
 
   protectedRoutes = () => {
+    this.router.post(
+      "/mahasiswa/:nim/matakuliah/:mkId",
+      this.middleware.authMiddleware,
+      this.mahasiswa.ambilMatkul
+    );
     this.router.put(
       "/mahasiswa/:nim/matakuliah/:mkId",
-      this.mahasiswa.ambilMatkul
+      this.middleware.authMiddleware,
+      this.mahasiswa.deleteMatkul
+    );
+    this.router.get(
+      "/mahasiswa/profile",
+      this.middleware.authMiddleware,
+      this.mahasiswa.profile
     );
     this.router.get("/mahasiswa/:nim", this.mahasiswa.ambilMahasiswaWithMatkul);
     this.router.get("/mahasiswa/", this.mahasiswa.ambilSeluruhMahasiswa);
 
     this.router.get("/prodi", this.prodi.get);
 
-    this.router.post("/matakuliah", this.matakuliah.create);
+    this.router.post(
+      "/matakuliah",
+      this.middleware.authMiddleware,
+      this.matakuliah.create
+    );
     this.router.get("/matakuliah", this.matakuliah.getAll);
     return this.router;
   };
